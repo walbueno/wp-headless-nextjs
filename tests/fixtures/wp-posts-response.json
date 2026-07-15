@@ -1,0 +1,18 @@
+[
+  {
+    "id": 101,
+    "date": "2026-03-15T09:30:00",
+    "slug": "por-que-performance-importa-no-front-end",
+    "title": { "rendered": "Por que performance importa no front-end" },
+    "excerpt": { "rendered": "<p>Um front-end lento perde venda. Neste post, exploro como medir e melhorar Core Web Vitals&hellip;</p>\n" },
+    "content": { "rendered": "<p>Conteúdo completo do post sobre performance.</p><p>Segundo parágrafo com mais detalhes.</p>" }
+  },
+  {
+    "id": 102,
+    "date": "2026-02-02T14:00:00",
+    "slug": "seguranca-aplicada-a-front-end",
+    "title": { "rendered": "Segurança aplicada a front-end: o básico que ninguém aplica" },
+    "excerpt": { "rendered": "<p>XSS e CSRF não são só teoria de curso. São riscos reais em qualquer formulário&#8217;s e checkout.</p>\n" },
+    "content": { "rendered": "<p>Conteúdo completo do post sobre segurança.</p>" }
+  }
+]
