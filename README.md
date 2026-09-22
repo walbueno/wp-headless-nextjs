@@ -1,53 +1,213 @@
-# wp-headless-nextjs
+# WordPress Headless + Next.js
 
-Front-end desacoplado (headless), consumindo a REST API nativa do WordPress, construído com Next.js e TypeScript.
+Aplicação web desenvolvida com **Next.js, React e TypeScript**, utilizando o WordPress como CMS desacoplado através da REST API.
 
-## Por que este projeto existe
+O projeto explora uma arquitetura headless na qual o WordPress é responsável pelo gerenciamento de conteúdo enquanto o Next.js atua como camada de apresentação.
 
-Combina duas competências que já aplico separadamente há anos, WordPress e Next.js, na configuração específica que faltava demonstrar no portfólio: o WordPress atuando como CMS headless, com o front-end totalmente desacoplado.
+---
 
-## O que o projeto faz
+## 🎯 Objetivo
 
-- Lista os posts publicados na Home, consumindo `GET /wp-json/wp/v2/posts`.
-- Exibe uma página individual para cada post (`/posts/[slug]`), consumindo `GET /wp-json/wp/v2/posts?slug=...`.
-- Separa a lógica pura (parsing de HTML, formatação de data e mapeamento de dados) da lógica de rede, permitindo testes unitários sem depender de conexão real.
+O objetivo é demonstrar uma integração entre um CMS tradicional e uma aplicação moderna baseada em React/Next.js.
 
-## O que o projeto não faz (escopo fechado)
+A arquitetura separa:
 
-- Sem autenticação e sem área logada.
-- Sem comentários.
-- Sem CMS customizado, custom post types ou campos ACF.
-- Sem paginação além do limite simples de `per_page`.
+* gerenciamento de conteúdo;
+* acesso aos dados;
+* transformação dos dados;
+* apresentação.
 
-## Configuração
+---
 
-```bash
-cp .env.example .env
+## 🏗️ Arquitetura
+
+```text
+┌──────────────┐
+│  WordPress   │
+│     CMS      │
+└──────┬───────┘
+       │
+       │ REST API
+       ▼
+┌──────────────┐
+│ lib/         │
+│ wordpress.ts │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│    Next.js   │
+│      UI      │
+└──────────────┘
 ```
 
-Edite o arquivo `.env` e defina:
+Essa abordagem permite separar o gerenciamento do conteúdo da experiência de apresentação.
 
-```env
-WORDPRESS_API_URL=https://seusite.com.br
+---
+
+## 📰 Funcionalidades
+
+A aplicação contempla:
+
+* listagem de posts;
+* visualização individual de posts;
+* rotas dinâmicas;
+* consumo da REST API do WordPress;
+* transformação dos dados;
+* revalidação de conteúdo.
+
+---
+
+## 🔄 Camada de dados
+
+A integração com WordPress está concentrada em uma camada específica.
+
+A aplicação diferencia o modelo recebido da API do modelo utilizado pela interface.
+
+```text
+Raw WordPress Post
+        ↓
+Transformation
+        ↓
+Application Post
+        ↓
+UI
 ```
 
-Nenhuma mudança de código é necessária. A REST API do WordPress vem habilitada por padrão desde a versão 4.7. Para confirmar que está ativa, acesse `https://seusite.com.br/wp-json/wp/v2/posts` no navegador e verifique se a resposta é um JSON válido.
+Essa separação reduz o acoplamento entre a API externa e os componentes da aplicação.
 
-## Instalação e uso
+---
 
-```bash
-npm install
-npm run dev
-```
+## 🧹 Transformação de dados
 
-## Rodando os testes
+O projeto possui funções responsáveis por operações como:
 
-```bash
-npm test
-```
+* remoção de HTML;
+* formatação de datas;
+* transformação do modelo recebido;
+* normalização das informações utilizadas pela interface.
 
-Os testes cobrem a lógica pura de parsing (remoção de tags HTML, formatação de data e mapeamento de posts), usando uma fixture baseada no formato real de resposta da REST API do WordPress, sem depender de rede.
+Essas funções são mantidas separadas da apresentação.
 
-## Stack
+---
 
-Next.js 16 (App Router), TypeScript e Jest.
+## ⚡ Revalidação
+
+As requisições utilizam revalidação para evitar que o conteúdo seja necessariamente buscado novamente a cada acesso.
+
+O projeto utiliza uma janela de revalidação de **60 segundos** para os dados configurados dessa maneira.
+
+---
+
+## 🧪 Testes
+
+O projeto possui testes para a camada de transformação e mapeamento dos dados.
+
+Os testes utilizam fixtures para evitar dependência direta de uma instância real do WordPress.
+
+Isso permite verificar a transformação dos dados de forma isolada.
+
+---
+
+## 🔐 Segurança
+
+A aplicação utiliza `dangerouslySetInnerHTML` em determinados pontos para renderização de conteúdo HTML proveniente do WordPress.
+
+Isso exige atenção especial em uma implementação de produção.
+
+O projeto **não afirma que essa abordagem é automaticamente segura contra XSS**.
+
+Em um cenário de produção, seria necessário estabelecer uma estratégia explícita de confiança, sanitização e validação do conteúdo recebido.
+
+---
+
+## 🧠 Decisões técnicas
+
+O projeto explora:
+
+* arquitetura Headless;
+* Next.js;
+* React;
+* TypeScript;
+* REST API;
+* separação entre dados e apresentação;
+* transformação de modelos;
+* revalidação;
+* testes unitários.
+
+---
+
+## 📦 Stack
+
+* Next.js
+* React
+* TypeScript
+* WordPress REST API
+* Jest
+
+---
+
+## 🚧 Escopo
+
+Este projeto concentra-se na integração entre WordPress e Next.js.
+
+Não possui:
+
+* painel administrativo próprio;
+* sistema de autenticação;
+* banco de dados próprio;
+* criação de conteúdo no Next.js;
+* infraestrutura de produção.
+
+O WordPress permanece responsável pelo gerenciamento do conteúdo.
+
+---
+
+## 🔄 Possíveis evoluções
+
+* paginação;
+* busca;
+* categorias;
+* tags;
+* preview de conteúdo;
+* autenticação para preview;
+* estratégia de cache mais avançada;
+* sanitização explícita de HTML;
+* observabilidade;
+* otimização de imagens.
+
+---
+
+## 💡 Relação com minha trajetória
+
+O projeto também representa uma evolução técnica da experiência acumulada com WordPress.
+
+A experiência histórica com desenvolvimento WordPress é aplicada aqui em uma arquitetura diferente, utilizando o CMS como fonte de conteúdo e o Next.js como camada de apresentação.
+
+---
+
+## 💡 O que este projeto demonstra
+
+* desenvolvimento de aplicações web;
+* Next.js;
+* React;
+* TypeScript;
+* arquitetura Headless;
+* integração com APIs;
+* transformação de dados;
+* separação de responsabilidades;
+* testes;
+* evolução de arquiteturas tradicionais para abordagens modernas.
+
+---
+
+## 👨‍💻 Autor
+
+**William Bueno**
+
+Software Engineer · Web Applications · Digital Products
+
+* [GitHub](https://github.com/walbueno)
+* [LinkedIn](https://www.linkedin.com/in/walbueno)
+* [Portfolio](https://williambueno.com.br)
+* [Beez Creative](https://beezcreative.com.br)
